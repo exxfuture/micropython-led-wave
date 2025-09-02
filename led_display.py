@@ -4,7 +4,6 @@
 from machine import Pin, SPI
 import time
 from ili9341 import Display, color565
-from xglcd_font import XglcdFont
 
 class LEDDisplay:
     """
@@ -34,7 +33,6 @@ class LEDDisplay:
         self.frame_count = 0
         self.fps_update_interval = 50
         self.start_time = time.ticks_ms()
-        self.font = self._load_font()
         
         print(f"LED Display initialized with {len(self.led_positions)} LEDs")
         print(f"LED positions: {self.led_positions}")
@@ -65,16 +63,6 @@ class LEDDisplay:
                 positions.append(x)
         
         return positions
-    
-    def _load_font(self):
-        """Load font for FPS display."""
-        try:
-            font = XglcdFont('fonts/FixedFont5x8.c', 5, 8)
-            print("Font loaded successfully")
-            return font
-        except:
-            print("Font not found, using built-in text")
-            return None
     
     def _adjust_brightness_rgb565(self, color, brightness):
         """
@@ -191,11 +179,8 @@ class LEDDisplay:
             # Clear previous FPS text area
             self.display.fill_rectangle(0, self.display.height - 25, 120, 25, black_bg)
             
-            # Draw FPS text using font library if available
-            if self.font:
-                self.display.draw_text(5, self.display.height - 20, fps_text, self.font, fps_color, black_bg)
-            else:
-                self.display.draw_text8x8(5, self.display.height - 15, fps_text, fps_color, black_bg, 0)
+            # Draw FPS text
+            self.display.draw_text8x8(5, self.display.height - 15, fps_text, fps_color, black_bg, 0)
             
             # Reset for next FPS calculation
             self.start_time = current_time
