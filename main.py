@@ -1,33 +1,42 @@
-# ESP32 CYD LED Wave Animation
-# Controls 6 LEDs with wave brightness animation using abstraction layer
+# LED Wave Animation
+# Controls X LEDs with wave brightness animation using abstraction layer
 
-import math
-import time
-from led_display import LEDDisplay
+from time import sleep
+from led_display import LEDDisplay as LEDController
+# from led_physical import LEDPhysical as LEDController
 
 # Animation parameters
-MIN_PWM = 0.1      # 10% minimum brightness
+MIN_PWM = 0.05      # % minimum brightness
 MAX_PWM = 1.0      # 100% maximum brightness
-WAVE_SPEED = 0.1   # Speed of wave movement
+WAVE_SPEED = 0.05   # Speed of wave movement
 
 def main():
     """Main LED wave animation control."""
-    print("ESP32 CYD LED Wave Animation Starting...")
+    print("LED Wave Animation Starting...")
 
-    # Initialize LED display (6 LEDs)
-    leds = LEDDisplay(num_leds=6, led_radius=8, padding=5)
+    # Initialize LED display
+    leds = LEDController(num_leds=6)
 
     # Wave animation variables
     wave_offset = 0.0
 
     try:
         while True:
-            # Calculate and set PWM for each LED with wave effect
+            # Calculate and set PWM for each LED with linear wave effect
             for i in range(leds.get_num_leds()):
-                # Calculate wave brightness for this LED
+                # Calculate linear wave brightness for this LED
                 # Each LED has a phase offset to create wave effect
-                phase = (i * 2.0 * math.pi) / leds.get_num_leds()  # Phase offset
-                wave_value = (1.0 + math.sin(wave_offset + phase)) / 2.0  # 0 to 1
+                phase_offset = i / leds.get_num_leds()  # Phase offset (0.0 to 1.0)
+
+                # Create linear wave using sawtooth pattern
+                wave_position = (wave_offset + phase_offset) % 2.0  # 0 to 2.0 cycle
+
+                if wave_position <= 1.0:
+                    # Rising edge: 0 to 1
+                    wave_value = wave_position
+                else:
+                    # Falling edge: 1 to 0
+                    wave_value = 2.0 - wave_position
 
                 # Map wave value to PWM range
                 pwm_value = MIN_PWM + wave_value * (MAX_PWM - MIN_PWM)

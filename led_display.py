@@ -12,18 +12,16 @@ class LEDDisplay:
     Can be easily swapped with physical LED implementation.
     """
     
-    def __init__(self, num_leds=6, led_radius=8, padding=5):
+    def __init__(self, num_leds=6):
         """
         Initialize the LED display with circles on screen.
         
         Args:
             num_leds (int): Number of LEDs to simulate
-            led_radius (int): Radius of each circle LED
-            padding (int): Padding between LEDs
         """
         self.num_leds = num_leds
-        self.led_radius = led_radius
-        self.padding = padding
+        self.led_radius = 8
+        self.padding = 5
         self.base_color = color565(255, 255, 255)  # White base color
         
         # Initialize display
@@ -210,3 +208,17 @@ class LEDDisplay:
         """Clean up resources."""
         self.display.clear(color565(0, 0, 0))
         print("LED Display cleaned up")
+
+# Example usage:
+# To switch from display LEDs to physical LEDs, simply change the import in main.py:
+# 
+# Instead of:
+#   from led_physical import LEDPhysical as LEDController
+# 
+# Use:
+#   from led_display import LEDDisplay as LEDController
+#
+# Then in main.py:
+#   leds = LEDController(num_leds=6)
+#
+# The rest of the code remains exactly the same!

@@ -10,7 +10,7 @@ class LEDPhysical:
     Compatible interface with LEDDisplay for easy switching.
     """
     
-    def __init__(self, num_leds=6, led_pins=None):
+    def __init__(self, num_leds=6):
         """
         Initialize physical LEDs with PWM control.
         
@@ -21,9 +21,7 @@ class LEDPhysical:
         self.num_leds = num_leds
         
         # Default pin assignments if none provided
-        if led_pins is None:
-            # Example pins - adjust based on your hardware
-            led_pins = [2, 4, 5, 18, 19, 21]  # GPIO pins for LEDs
+        led_pins=[4, 16, 17]  # GPIO pins for LEDs
         
         # Ensure we don't exceed available pins
         self.led_pins = led_pins[:num_leds]
